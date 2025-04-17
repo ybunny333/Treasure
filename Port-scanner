@@ -1,0 +1,31 @@
+import socket
+import ipaddress
+
+def port_scan(target, start_port, end_port):
+    try:
+        ipaddress.ip_address(target)
+    except ValueError:
+        print("Invalid IP address")
+        return
+
+    print(f"Scanning {target} for open ports...")
+    for port in range(start_port, end_port + 1):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(1)
+                result = s.connect_ex((target, port))
+                if result == 0:
+                    print(f"Port {port} is open")
+        except socket.gaierror:
+            print(f"Invalid IP address: {target}")
+            return
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return
+
+# Example usage
+target_ip = input("Enter target IP: ")
+try:
+    port_scan(target_ip, 1, 100)
+except Exception as e:
+    print(f"Error: {e}")
