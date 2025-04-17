@@ -1,0 +1,16 @@
+import hashlib
+
+def hash_file(filename):
+    sha256 = hashlib.sha256()
+    try:
+        with open(filename, "rb") as f:
+            while chunk := f.read(4096):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    except FileNotFoundError:
+        return "Error: File not found."
+
+if __name__ == "__main__":
+    file_path = input("Enter file path: ")
+    result = hash_file(file_path)
+    print("SHA-256 Hash:", result)
