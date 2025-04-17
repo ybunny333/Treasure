@@ -1,0 +1,26 @@
+import socket
+
+# List of blocked IPs (you can add more)
+blocked_ips = ["192.168.1.100", "10.0.0.5"]
+
+# Simple firewall function
+def firewall():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("0.0.0.0", 9999))
+    s.listen(5)
+    print("Firewall is running... Waiting for connections...")
+
+    while True:
+        client, addr = s.accept()
+        ip = addr[0]
+        print(f"Connection from {ip}")
+
+        if ip in blocked_ips:
+            print(f"Blocked IP {ip}. Connection closed.")
+            client.close()
+        else:
+            print(f"Allowed IP {ip}. Connection accepted.")
+            client.send(b"Hello from the firewall!")
+            client.close()
+
+firewall()
